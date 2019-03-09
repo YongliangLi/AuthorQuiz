@@ -14,24 +14,44 @@ function Hero(props) {
   );
 }
 
-function Turn() {
-  return <div />;
+function Turn({ author, books }) {
+  return (
+    <div className="row turn" style={{ backgroundColor: "white" }}>
+      <div className="col-4 offset-1">
+        <img src={author.imageUrl} className="authorimage" alt="Author" />
+      </div>
+      <div className="col-6">
+        {books.map(title => (
+          <p>{title}</p>
+        ))}
+      </div>
+    </div>
+  );
 }
 
 function Continue() {
   return <div />;
 }
 
-class AuthorQuiz extends Component {
-  render() {
-    return (
-      <div className="container-fluid">
-        <Hero />
-        <Turn />
-        <Continue />
+function Footer() {
+  return (
+    <div id="footer" className="row">
+      <div className="col-12">
+        <p className="text-muted credit">All images are from wikipedia</p>
       </div>
-    );
-  }
+    </div>
+  );
+}
+
+function AuthorQuiz({ turnData }) {
+  return (
+    <div className="container-fluid">
+      <Hero />
+      <Turn {...turnData} />
+      <Continue />
+      <Footer />
+    </div>
+  );
 }
 
 export default AuthorQuiz;
