@@ -4,6 +4,7 @@ import "./index.css";
 import AuthorQuiz from "./AuthorQuiz";
 import * as serviceWorker from "./serviceWorker";
 import { stat } from "fs";
+import { shuffle, sample } from "underscore";
 
 const authors = [
   {
@@ -46,14 +47,38 @@ const authors = [
   }
 ];
 
+function getTurnData(authors) {
+  const allBooks = authors.reduce(function(p, c, j) {
+    return p.concat(c.books);
+  }, []);
+  const fourRandomBooks = shuffle(allBooks).slice(0, 4);
+  const answer = sample(fourRandomBooks);
+  return {
+    author: authors.find(author =>
+      author.books.some(title => title === answer)
+    ),
+    books: fourRandomBooks
+  };
+}
+
+function onAnswerSelected(answer) {
+  const isCorrect = state.turnData.author.books.some(title => title === answer);
+  state.highlight = isCorrect ? "correct" : "wrong";
+  render();
+}
+
 const state = {
-  turnData: {
-    author: authors[0],
-    books: authors[0].books
-  }
+  turnData: getTurnData(authors),
+  highlight: ""
 };
 
-ReactDOM.render(<AuthorQuiz {...state} />, document.getElementById("root"));
+function render() {
+  ReactDOM.render(
+    <AuthorQuiz {...state} onAnwserSelected={onAnswerSelected} />,
+    document.getElementById("root")
+  );
+}
+render();
 
 // If you want your AuthorQuiz to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
