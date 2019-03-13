@@ -61,19 +61,23 @@ function getTurnData(authors) {
 }
 
 function onAnswerSelected(answer) {
-  const isCorrect = this.state.turnData.author.books.some(
-    title => title === answer
-  );
-  this.state.highlight = isCorrect ? "correct" : "wrong";
+  const isCorrect = state.turnData.author.books.some(title => title === answer);
+  state.highlight = isCorrect ? "correct" : "wrong";
+  render();
 }
 
 const state = {
   turnData: getTurnData(authors),
-  highlight: "correct",
-  onAnswerSelected: onAnswerSelected
+  highlight: ""
 };
 
-ReactDOM.render(<AuthorQuiz {...state} />, document.getElementById("root"));
+function render() {
+  ReactDOM.render(
+    <AuthorQuiz {...state} onAnwserSelected={onAnswerSelected} />,
+    document.getElementById("root")
+  );
+}
+render();
 
 // If you want your AuthorQuiz to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
